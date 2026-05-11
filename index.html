@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TechCortez</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="main-header">
+
+    <div class="logo">TechCortez</div>
+
+    <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+
+    <nav class="nav-menu" id="nav-menu">
+        <ul>
+            <li><a href="#">Inicio</a></li>
+            <li><a href="#productos">Productos</a></li>
+            <li><a href="#" onclick="openContact()">Contacto</a></li>
+            <li><a href="#">Contacto 1</a></li>
+            <li><a href="#">Contacto 2</a></li>
+        </ul>
+    </nav>
+
+    <div class="header-actions">
+        <button class="dark-btn" onclick="toggleMode()">🌙</button>
+
+        <div class="cart" onclick="openCart()">
+            🛒 <span id="cart-count">0</span>
+        </div>
+    </div>
+
+</header>
+
+<!-- HERO -->
+<section class="hero">
+    <div class="hero-content">
+        <h1>Bienvenido a TechCortez</h1>
+        <p>La mejor tecnología gamer y premium</p>
+        <a href="#productos" class="hero-btn">Ver Productos</a>
+    </div>
+</section>
+
+<!-- BUSCADOR -->
+<section class="search-section">
+    <input type="text" id="searchInput" placeholder="🔍 Buscar producto..." onkeyup="searchProducts()">
+</section>
+
+<!-- PRODUCTOS -->
+<main class="container" id="productos">
+
+    <h2>Productos Destacados</h2>
+
+    <section class="grid-content">
+
+        <article class="card">
+
+            <span class="offer">-20%</span>
+            <span class="heart">❤️</span>
+
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTA2RjM-dTRNNHNDlTCewskbYWmMd_u-1TeAw&s">
+
+            <h3>PC Gamer</h3>
+
+            <div class="stars">⭐⭐⭐⭐⭐</div>
+
+            <p>Alto rendimiento.</p>
+
+            <span class="price">$1500</span>
+
+            <div class="quantity-box">
+                <input type="number" min="1" value="1" id="qty0">
+            </div>
+
+            <button onclick="addToCart('PC Gamer',1500,'qty0')">Agregar</button>
+
+        </article>
+
+
+        <article class="card">
+
+            <span class="offer">-15%</span>
+            <span class="heart">❤️</span>
+
+            <img src="https://images.unsplash.com/photo-1593642634524-b40b5baae6bb">
+
+            <h3>Laptop Gamer</h3>
+
+            <div class="stars">⭐⭐⭐⭐⭐</div>
+
+            <p>Potencia portátil.</p>
+
+            <span class="price">$1200</span>
+
+            <div class="quantity-box">
+                <input type="number" min="1" value="1" id="qty1">
+            </div>
+
+            <button onclick="addToCart('Laptop Gamer',1200,'qty1')">Agregar</button>
+
+        </article>
+
+
+        <article class="card">
+
+            <span class="offer">-10%</span>
+            <span class="heart">❤️</span>
+
+            <img src="https://images.unsplash.com/photo-1695048133142-1a20484d2569">
+
+            <h3>iPhone</h3>
+
+            <div class="stars">⭐⭐⭐⭐⭐</div>
+
+            <p>Tecnología premium.</p>
+
+            <span class="price">$1400</span>
+
+            <div class="quantity-box">
+                <input type="number" min="1" value="1" id="qty2">
+            </div>
+
+            <button onclick="addToCart('iPhone',1400,'qty2')">Agregar</button>
+
+        </article>
+
+    </section>
+</main>
+<!-- CONTACTO -->
+<div id="contact-modal" class="modal hidden">
+    <div class="modal-content">
+        <span class="close" onclick="closeContact()">✖</span>
+
+        <h2>Contacto</h2>
+
+        <p>📱 +51 970 760 277</p>
+        <p>📧 maykercortez934@gmail.com</p>
+    </div>
+</div>
+
+<!-- CARRITO -->
+<div id="cart-modal" class="modal hidden">
+    <div class="modal-content">
+
+        <span class="close" onclick="closeCart()">✖</span>
+
+        <h2>Carrito</h2>
+
+        <ul id="cart-list"></ul>
+
+        <p class="total">Total: $<span id="total">0</span></p>
+
+    </div>
+</div>
+
+<!-- FOOTER -->
+<footer class="main-footer">
+
+    <div class="socials">
+        <p>📸 Instagram: mayker_cortez</p>
+        <p>🎵 TikTok: TechCortez</p>
+        <p>📘 Facebook: TechCortez</p>
+    </div>
+
+    <p>&copy; 2026 TechCortez</p>
+
+</footer>
+
+<script>
+
+let cart = JSON.parse(localStorage.getItem("cart")) || [];
+let total = 0;
+
+cart.forEach(item => {
+    total += item.price * item.qty;
+});
+
+updateCart();
+
+function addToCart(name, price, qtyId) {
+
+    let qty = parseInt(document.getElementById(qtyId).value);
+
+    cart.push({ name, price, qty });
+
+    total += price * qty;
+
+    localStorage.setItem("cart", JSON.stringify(cart));
+
+    document.getElementById("cart-count").textContent = cart.length;
+
+    updateCart();
+}
+
+function updateCart() {
+
+    let list = document.getElementById("cart-list");
+
+    list.innerHTML = "";
+
+    cart.forEach((item, i) => {
+
+        let li = document.createElement("li");
+
+        li.innerHTML = `
+            <div>
+                ${item.name}<br>
+                Cantidad: ${item.qty}
+            </div>
+            <div>
+                $${item.price * item.qty}
+                <button onclick="removeItem(${i})">❌</button>
+            </div>
+        `;
+
+        list.appendChild(li);
+    });
+
+    document.getElementById("cart-count").textContent = cart.length;
+
+    document.getElementById("total").textContent = total;
+}
+
+function removeItem(index) {
+
+    total -= cart[index].price * cart[index].qty;
+
+    cart.splice(index, 1);
+
+    localStorage.setItem("cart", JSON.stringify(cart));
+
+    updateCart();
+}
+
+function openCart() {
+    document.getElementById("cart-modal").classList.remove("hidden");
+}
+
+function closeCart() {
+    document.getElementById("cart-modal").classList.add("hidden");
+}
+
+function openContact() {
+    document.getElementById("contact-modal").classList.remove("hidden");
+}
+
+function closeContact() {
+    document.getElementById("contact-modal").classList.add("hidden");
+}
+
+function toggleMode() {
+    document.body.classList.toggle("light-mode");
+}
+
+function searchProducts() {
+
+    let input = document.getElementById("searchInput").value.toLowerCase();
+
+    let cards = document.querySelectorAll(".card");
+
+    cards.forEach(card => {
+
+        let title = card.querySelector("h3").textContent.toLowerCase();
+
+        if(title.includes(input)) {
+            card.style.display = "block";
+        } else {
+            card.style.display = "none";
+        }
+    });
+}
+
+function toggleMenu() {
+    document.getElementById("nav-menu").classList.toggle("active");
+}
+
+</script>
+
+</body>
+</html>
